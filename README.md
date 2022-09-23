@@ -3,7 +3,7 @@ A script developed to circumvent logfile size issues within esologs.
 
 MODES:
 	
-	-Extract Single Fight and Split: Used to address single fights that are too large to be uploaded.
+	-****Extract Single Fight and Split****: Used to address single fights that are too large to be uploaded.
 	 Extracts a single fight into a separate log file and adds a split to get past data limits.
 	 
 	-Extract Single Fight: Extracts a single fight into a separate log file without splitting.
