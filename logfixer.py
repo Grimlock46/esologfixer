@@ -275,6 +275,7 @@ def split_log(log_file, log_name, chosen_fight):
 
         found_flag = False
         pertinent_info = []
+        split_line = chosen_fight[4] + round((chosen_fight[5] - chosen_fight[4]) / 2)
         # Loop through each line in the original log to split it
         for i, line in enumerate(log_file):
             # Split each line into chunks based on comma delineation
@@ -293,7 +294,8 @@ def split_log(log_file, log_name, chosen_fight):
             # Lines between the start and end of the fight
             elif chosen_fight[4] <= i <= chosen_fight[5]:
                 # The very first time after the halfway point of the fight - add a split
-                if time > chosen_fight[3] and found_flag is False:
+                # time > chosen_fight[3]
+                if found_flag is False and i > split_line:
                     # Apply the halfway cut by ending the log and restarting it directly after
                     # Depending on what split_time is, will either combine or make 2 distinct fights with 1 min between
                     new_file.write(str(time) + ",END_LOG\n")
@@ -307,7 +309,9 @@ def split_log(log_file, log_name, chosen_fight):
                         new_file.write(pert_line)
                     found_flag = True
                 # Any line after the halfway point, but still within the bounds
-                elif time > chosen_fight[3] and found_flag is True:
+                # time > chosen_fight[3]
+                # Should be irrelevant if using line split instead of time split
+                elif i > split_line and found_flag is True:
                     # Apply split_time to everything after the halfway point (if 0 just stays normal time)
                     line = str(line).replace(str(time) + ",", str(time + split_time) + ",", 1)
                     # End the log if it's the last line, otherwise write actual fight data
@@ -317,7 +321,7 @@ def split_log(log_file, log_name, chosen_fight):
                         new_file.write(line)
                 # Any time before the halfway point
                 else:
-                    # Get pert info after start of fight, but before half time
+                    # Get pert info after start of fight, but before the split time
                     if any(word in line for word in keywords):
                         # Add the pertinent line into storage for later
                         pertinent_info.append(line)
